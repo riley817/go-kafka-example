@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/IBM/sarama"
 )
@@ -40,18 +39,6 @@ func main() {
 			fmt.Println("Consumed -> ")
 			fmt.Println(string(msg.Key))
 			fmt.Println(string(msg.Value))
-		}
-	}
-
-	for msg := range partitions.Messages() {
-		var data map[string]string
-
-		if err := json.Unmarshal(msg.Value, &data); err != nil {
-			panic(err)
-		}
-
-		for key, val := range data {
-			fmt.Print("Key: ", key, " Value: ", val, "\n")
 		}
 	}
 }
