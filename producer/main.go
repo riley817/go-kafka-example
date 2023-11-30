@@ -1,12 +1,32 @@
 package main
 
 import (
-	"encoding/json"
-	"github.com/IBM/sarama"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/riley817/go-kafka-example/producer/interface/router"
 )
 
-// This is a simple example of a Kafka producer.
+var writeLogRoutes router.WriteLogRoutes
+
+func init() {
+	writeLogRoutes = *router.NewWriteLogRoutes()
+
+}
+
 func main() {
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World 👋!")
+	})
+
+	app.Post("/write/favorite", writeLogRoutes.RegisterFavorite)
+
+	log.Fatal(app.Listen(":3000"))
+}
+
+// This is a simple example of a Kafka producer.
+/*func main() {
 	config := sarama.NewConfig()
 	config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer([]string{"localhost:29092"}, config)
@@ -20,4 +40,4 @@ func main() {
 		Value:     sarama.ByteEncoder(jsonBody),
 		Partition: int32(0),
 	})
-}
+}*/
